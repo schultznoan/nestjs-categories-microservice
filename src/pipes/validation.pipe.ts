@@ -9,20 +9,20 @@ export class ValidationPipe implements PipeTransform {
     const obj = plainToClass(metadata.metatype, value)
     const errors = await validate(obj)
 
-    if (errors.length) {
-      const messages = errors.map(error => {
-        return {
-          [error.property]: Object.values(error.constraints).join('; ')
-        }
-      })
-
-      throw new ValidationException({
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: 'Ошибка валидации',
-        validation: messages
-      })
+    if (!errors.length) {
+      return value
     }
 
-    return value
+    const messages = errors.map(error => {
+      return {
+        [error.property]: Object.values(error.constraints).join('; ')
+      }
+    })
+
+    throw new ValidationException({
+      statusCode: HttpStatus.BAD_REQUEST,
+      message: 'Ошибка валидации',
+      validation: messages
+    })
   }
 }
