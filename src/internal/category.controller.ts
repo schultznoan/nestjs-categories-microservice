@@ -2,7 +2,9 @@ import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common'
 
 import { CategoryService } from './category.service'
 
-import { CategoryModel } from './category.model'
+import { ICategoryResponse } from '../interface/category-response.interface'
+
+import { CategoriesParamsDto } from 'src/dtos/category-params.dto'
 
 @Controller('categories')
 export class CategoryController {
@@ -10,7 +12,7 @@ export class CategoryController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  getAll (): Promise<CategoryModel[]> {
-    return this.categoriesService.getAll()
+  getAll (@Query() params: CategoriesParamsDto): Promise<ICategoryResponse> {
+    return this.categoriesService.getAll(params)
   }
 }
